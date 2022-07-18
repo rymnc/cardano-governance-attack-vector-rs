@@ -1,0 +1,12 @@
+[package]
+name = "cardano-governance-attack-vector-rs"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+ed25519-dalek = "*"
+pretty-hex = "*"
+rand_core = "*"
+blake2 = "*"
