@@ -169,7 +169,7 @@ impl Display for VotingRound {
     fn fmt(&self, f: &mut Formatter) -> Result<(), Error> {
         write!(
             f,
-            "Voting Round:\nSeed for committee generation:{}\nVoters:{:?}\nCommittee members:{:?}\nReceived votes:{:?}\nStage:{:?}\nNext round seed secret:{}",
+            "=========================================================================\nVoting Round:\nSeed for committee generation:{}\nVoters:{:?}\nCommittee members:{:?}\nReceived votes:{:?}\nStage:{:?}\nNext round seed secret:{}\n============================================================================================",
             get_hex(&self.seed_for_committee_generation),
             self.voters.iter().map(|v| get_hex(v)).collect::<Vec<String>>(),
             self.committee_members.iter().map(|v| get_hex(&v)).collect::<Vec<String>>(),
@@ -272,13 +272,20 @@ fn main() {
 
     println!("Voting round completed!");
 
+    // transition voting stage to post-voting stage
     first_voting_round.update_voting_stage(VotingStages::PostVoting);
 
     println!("Post-Voting round intitated");
 
+    // tally the votes
     let tallied_votes = first_voting_round.tally_votes();
 
     println!("Tallied votes: {:?}", tallied_votes);
+    println!("The vote has {}!", if tallied_votes.yes_votes > tallied_votes.no_votes {
+        "passed"
+    } else {
+        "failed"
+    });
 
     println!("Generating next round seed secret...");
     
@@ -299,11 +306,11 @@ fn main() {
         }
     }
 
-    let mut round = first_voting_round.add_next_round_seed_hash(combined_committee_generated_seeds);
+    first_voting_round.add_next_round_seed_hash(combined_committee_generated_seeds);
 
     println!("Next round seed secret generated:{}", get_hex(&first_voting_round.next_round_seed_secret));
 
-    // adding only 2 committee members confirmations
+    // adding only 2 committee members confirmations, this should not allow generation of the seed for the next round
 
     println!("Adding key confirmations...");
 
@@ -314,14 +321,17 @@ fn main() {
     println!("Added key confirmations");
     match first_voting_round.generate_next_round_voting_seed() {
         Ok(voting_seed) => println!("Voting seed: {:?}", voting_seed),
+        // this branch will be chosen
         Err(e) => eprintln!("Error generating next round seed: {:?}", e)
     };
 
     println!("Adding one more key confirmation");
+    // add the next confirmation, which will allow seed generation
     first_voting_round.add_key_confirmation(committee_member_ids[2]);
     match first_voting_round.generate_next_round_voting_seed() {
         Ok(voting_seed) => println!("Voting seed: {}", get_hex(&voting_seed)),
         Err(e) => eprintln!("Error generating next round seed: {:?}", e)
     }
 
+    println!("Post voting process complete, now the next round can start")
 }
