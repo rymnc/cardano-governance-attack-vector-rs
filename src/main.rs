@@ -135,27 +135,29 @@ fn main() {
 
     println!("Next round seed secret generated:{}", get_hex(&first_voting_round.next_round_seed_secret));
 
-    // adding only 2 committee members confirmations, this should not allow generation of the seed for the next round
+    // adding only x committee members confirmations, this should not allow generation of the seed for the next round
 
     println!("Adding key confirmations...");
+    
+    let below_threshold = first_voting_round.get_threshold() as usize - 1;
 
-    first_voting_round.add_key_confirmation(committee_member_ids[0]);
-    first_voting_round.add_key_confirmation(committee_member_ids[1]);
-
+    for i in 0..below_threshold {
+        first_voting_round.add_key_confirmation(committee_member_ids[i]);
+    }
 
     println!("Added key confirmations");
     match first_voting_round.generate_next_round_voting_seed() {
-        Ok(voting_seed) => println!("Voting seed: {:?}", voting_seed),
+        Ok(_) => println!("This should not happen!"),
         // this branch will be chosen
         Err(e) => eprintln!("Error generating next round seed: {:?}", e)
     };
 
     println!("Adding one more key confirmation");
     // add the next confirmation, which will allow seed generation
-    first_voting_round.add_key_confirmation(committee_member_ids[2]);
+    first_voting_round.add_key_confirmation(committee_member_ids[below_threshold]);
     match first_voting_round.generate_next_round_voting_seed() {
         Ok(voting_seed) => println!("Voting seed: {}", get_hex(&voting_seed)),
-        Err(e) => eprintln!("Error generating next round seed: {:?}", e)
+        Err(_) => println!("This should not happen!")
     }
 
     println!("Post voting process complete, now the next round can start")

@@ -113,9 +113,13 @@ impl VotingRound {
         self.key_confirmations.push(committee_member_id)
     }
 
+    pub fn get_threshold(&self) -> f64 {
+      (THRESHOLD * (self.committee_members.len() as f64)).floor()
+    }
+
     pub fn generate_next_round_voting_seed(&self) -> Result<[u8; HASH_SIZE], &'static str> {
         // only if the self.key_confirmations.length >= 2/3 of COMMITTEE_MEMBERS, then allow, else panic
-        if (self.key_confirmations.len() as f64) < THRESHOLD * (self.committee_members.len() as f64) {
+        if (self.key_confirmations.len() as f64) < self.get_threshold() {
             return Err("Cannot generate next round voting seed if threshold is not met");
         } 
         Ok(self.next_round_seed_secret)
