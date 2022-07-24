@@ -42,6 +42,7 @@ dependencies = [
  "blake2",
  "ed25519-dalek",
  "pretty-hex",
+ "rand",
  "rand_core",
 ]
 
