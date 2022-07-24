@@ -6,8 +6,8 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-ed25519-dalek = "*"
-pretty-hex = "*"
-rand_core = "*"
-blake2 = "*"
-rand = "*"
+ed25519-dalek = "1.0.1"
+pretty-hex = "0.3.0"
+rand_core = "0.5.1"
+blake2 = "0.10.4"
+rand = "0.7.3"
