@@ -11,9 +11,7 @@ use rand::seq::SliceRandom;
 use rand_core::OsRng;
 
 use crate::constants::{HASH_SIZE,COMMITTEE_MEMBERS,VOTERS};
-use crate::structs::VotingStages;
-use crate::structs::get_random_vote_type;
-use crate::structs::{Vote, VoterId, VotingRound, Voter};
+use crate::structs::{Vote, VoterId, VotingRound, Voter, VotingStages, get_random_vote_type};
 use crate::utils::{generate_voting_round_signing_key, generate_voter_id, get_hex};
 
 
