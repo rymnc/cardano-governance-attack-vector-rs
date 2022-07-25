@@ -141,11 +141,10 @@ impl Display for VotingRound {
     fn fmt(&self, f: &mut Formatter) -> Result<(), Error> {
         write!(
             f,
-            "=========================================================================\nVoting Round:\nSeed for committee generation:{}\nVoters:{:?}\nCommittee members:{:?}\nReceived votes:{:?}\nStage:{:?}\nNext round seed secret:{}\n============================================================================================",
-            get_hex(&self.seed_for_committee_generation),
+            "=========================================================================\nVoting Round:\nVoters:{:?}\nCommittee members:{:?}\nReceived votes:{:?}\nStage:{:?}\nNext round seed secret:{}\n============================================================================================",
             self.voters.iter().map(|v| get_hex(v)).collect::<Vec<String>>(),
             self.committee_members.iter().map(|v| get_hex(&v)).collect::<Vec<String>>(),
-            // loop over the received votes, and get_hex the voter_id, and show what they voted for
+            // loop over the received votes, and get_hex the voter_id, and show what they voted for in table format
             self.received_votes.iter().map(|v| format!("{} voted {:?}", get_hex(&v.voter_id), v.vote)).collect::<Vec<String>>(),
             self.stage,
             get_hex(&self.seed_for_committee_generation)
